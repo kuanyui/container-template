@@ -14,9 +14,19 @@ CONTAINER_NAME = example_container
 # ██║╚██╔╝██║██╔══██║██║██║╚██╗██║
 # ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║
 # ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+##
+## These targets can be run in host, also inside container:
+##
 
 help:     ## Show this self-documented help message.
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@#grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@awk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*## *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST)
+
+watch:     ## Watch for development
+	@echo "[NOT IMPLEMENT]"
+
+build:     ## Build the project
+	@echo "[NOT IMPLEMENT]"
 
 #  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗███████╗██████╗
 # ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██║████╗  ██║██╔════╝██╔══██╗
@@ -24,8 +34,11 @@ help:     ## Show this self-documented help message.
 # ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██║██║██║╚██╗██║██╔══╝  ██╔══██╗
 # ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║██║ ╚████║███████╗██║  ██║
 #  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
+##
+## These targets are to manipulate container, therefore, can only be run in host:
+##
 
-# =======================================================
+# --------------------------------------------------------------
 
 # Compatibility of podman & docker (prefer `podman`)
 _CONTAINER_ENGINE := $(shell if docker -v 2>&1 | grep -q "podman" ; then echo "PODMAN"; else echo "DOCKER"; fi)
@@ -42,7 +55,7 @@ else
 	_CONTAINER_ENGINE_RUN_ARGS :=
 endif
 
-# =======================================================
+# --------------------------------------------------------------
 
 c-env:   ## [Container] Display enviromnent variables for podman / docker
 	@echo "========================================"
