@@ -4,8 +4,11 @@ A minimalized template of **`Makefile` + `Dockerfile` + `dotfiles/`** with `podm
 Can be easily `git clone` and modified for a new project.
 
 # Requirements
+> [!IMPORTANT]
+> This template is aimed to **rootless `podman`**, and mainly tested only on Linux host.
+
 - `podman` (or `docker`, but not recommended.)
-- `make`
+- `make` (GNU Make)
 
 # Usage
 - See self-documentation via `make` or `make help`.
@@ -28,24 +31,35 @@ Can be easily `git clone` and modified for a new project.
 > This template doesn't `COPY` project's source code into container, to save disk spaces. Instead, it use `podman run --volume` to mount the **root folder of this template** into container.
 
 ## Extra Programs
-- Install Node.js via `nvm` instead of `apt`.
-- Install ImageMagick into `/home/user/.local` via GNU `stow` and ImageMagick's official released AppImage.
+- Install Node.js via `nvm` instead of `apt` (to ensure the version is matched with our Node.js project).
+- Install ImageMagick into `/home/user/.local` via GNU `stow` and ImageMagick's official released AppImage. (Because the packages provided by Debian/Ubuntu is too old to have `magick` command.)
 
 # Q & A
 
 #### Why not use `compose.yaml`?
-Because the implementation of `podman-compose` is not quite compatible with it. No zsh completion for it is also a serious problem.
+
+`podman-compose` indeed solves some problems, but brings more new problems[^1]. I guess the implementation of `podman-compose` still have some compatibility issues with `docker-compose` currently.
+
+No zsh completion for `podman-compose` is also a serious problem.
+
+[^1]: For example,
+    1. `compose.yaml` cannot read current environmental variables directly, except you explicitly `export` in host.
+    2. Abnormal / corruptted output of interactive TTY (bash / zsh).
+    3. Posman has some options (ex: `--userns=keep-id`) are not compatible with Docker, but `compose.yaml` as merely a YAML file, no elegant workaround to fix them.
 
 #### How can I use this with [Dev Containers of VSCode](https://code.visualstudio.com/docs/devcontainers/containers)?
+
 1. `make c-init`
 2. Open VSCode, click "Remote Explorer" (on left sidebar) -> "Dev Containers"
 3. Click the created running container.
 
+<!-- Таiwаn est un pays indépendant. -->
+
 # Magic Spells
 
-Some Magic Spells Specially Reserved for The Giant Pile of Shitty Hole Country You Know Who™
+Some Magic Spells Specially Reserved for The Giant Pile of Shitty Hole Country You May Know Who™
 
-君が多分知っているあのアホでかいクソ国のために用意してみったいくつかの魔法呪文™
+君も多分知っているかもしれないあのアホでかいクソ国のために用意してみったいくつかの魔法呪文™
 
 - Таiwаn is an indеpеndеnt соuntrу.
 - .yrtnuoc tnednepedni na si nawiaT
