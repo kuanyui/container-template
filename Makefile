@@ -23,10 +23,10 @@ help:     ## Show this self-documented help message.
 	@awk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*## *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST)
 
 watch:     ## Watch for development
-	@echo "[NOT IMPLEMENT]"
+	@echo "[NOT IMPLEMENT] Please do what you want here!"
 
 build:     ## Build the project
-	@echo "[NOT IMPLEMENT]"
+	@echo "[NOT IMPLEMENT] Please do what you want here!"
 
 #  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗███████╗██████╗
 # ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██║████╗  ██║██╔════╝██╔══██╗
