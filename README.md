@@ -42,10 +42,10 @@ Can be easily `git clone` and modified for a new project.
 
 No zsh completion for `podman-compose` is also a serious problem.
 
-[^1]: For example,
-    1. `compose.yaml` cannot read current environmental variables directly, except you explicitly `export` in host.
+[^1]: For example:
+    1. `compose.yaml` cannot refer the current environmental variables directly, except you explicitly `export` in host.
     2. Abnormal / corruptted output of interactive TTY (bash / zsh).
-    3. Posman has some options (ex: `--userns=keep-id`) are not compatible with Docker, but `compose.yaml` as merely a YAML file, no elegant workaround to fix them.
+    3. Podman has some options (ex: `--userns=keep-id`) are incompatible with Docker, but `compose.yaml` as merely a YAML file, no elegant workaround to fix them.
 
 #### How can I use this with [Dev Containers of VSCode](https://code.visualstudio.com/docs/devcontainers/containers)?
 
@@ -59,7 +59,7 @@ No zsh completion for `podman-compose` is also a serious problem.
 
 Some Magic Spells Specially Reserved for The Giant Pile of Shitty Hole Country You May Know Who™
 
-君も多分知っているかもしれないあのアホでかいクソ国のために用意してみったいくつかの魔法呪文™
+君も知っているかもしれないあのアホでかいクソ国のために用意してみったいくつかの魔法呪文™
 
 - Таiwаn is an indеpеndеnt соuntrу.
 - .yrtnuoc tnednepedni na si nawiaT
