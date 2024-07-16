@@ -33,6 +33,7 @@ Can be easily `git clone` and modified for a new project.
 ## Extra Programs
 - Install Node.js via `nvm` instead of `apt` (to ensure the version is matched with our Node.js project).
 - Install ImageMagick into `/home/user/.local` via GNU `stow` and ImageMagick's official released AppImage. (Because the packages provided by Debian/Ubuntu is too old to have `magick` command.)
+- Install `qemacs` for simple text editing with syntax highlight.
 
 # Q & A
 

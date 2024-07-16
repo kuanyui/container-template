@@ -19,11 +19,16 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 # Some basic packages
 # Some libraries are for rendering text in `magick`.
 RUN apt-get update && \
-    apt-get install --yes --no-install-recommends ca-certificates \
+    apt-get install --yes --no-install-recommends ca-certificates gpg \
     less curl wget make git mg stow \
     zsh zsh-syntax-highlighting \
     graphicsmagick libfontconfig1 libharfbuzz0b libfribidi0
 
+# Install qemacs
+RUN echo 'deb http://download.opensuse.org/repositories/home:/tarcjf/Debian_12/ /' | tee /etc/apt/sources.list.d/home:tarcjf.list && \
+    curl -fsSL https://download.opensuse.org/repositories/home:tarcjf/Debian_12/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/home_tarcjf.gpg > /dev/null && \
+    apt update && \
+    apt install --yes --no-install-recommends qemacs
 
 # Create a non-previleged user (for safety), along with its home directory
 RUN groupadd -g 1000 user
