@@ -1,4 +1,4 @@
-\### ============================================
+### ============================================
 ### Prompts
 ### ============================================
 PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{gray}]%F{yellow}%#%f%b (%D{%Y-%m-%d %H:%M:%S}) "
@@ -17,23 +17,10 @@ PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{g
 PATH=${HOME}/.local/bin:${PATH}
 
 ### ============================================
-### Syntax Highlighting (apt-get install zsh-syntax-highlighting zsh-autosuggestions)
-### ============================================
-if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-        source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
-if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-# bindkey "$terminfo[kcuu1]" history-substring-search-up
-# bindkey "$terminfo[kcud1]" history-substring-search-down
-# bindkey '^[[A' history-substring-search-up
-# bindkey '^[[B' history-substring-search-down
-
 # [Backspace] don't seem / as part of word.
 # https://stackoverflow.com/a/1438523/1244729
 # This is probably fairly specific, but if this doesn't work, it may be because of the zsh-syntax-highlighting plugin: https://github.com/zsh-users/zsh-syntax-highlighting/issues/67. Make sure to source that plugin at the end of your zshrc.
+### ============================================
 autoload -U select-word-style
 select-word-style bash
 
@@ -57,6 +44,12 @@ setopt share_history          # share command history data
 ### ============================================
 ### Completions
 ### ============================================
+# I don't know why this `compinit` is not required in
+# `debian:bookworm` Docker image, but required in a real Debian
+# Bookworm (debian 12) installation...
+autoload -U compinit
+compinit
+
 zstyle ':completion:*' menu select=1 _complete _ignored _approximate  # Tab completion can use arrow keys to select now
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
@@ -117,3 +110,19 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+
+### ============================================
+### autosuggesstions (apt install zsh-autosuggestions)
+### ============================================
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+### ============================================
+### Syntax Highlighting (apt-get install zsh-syntax-highlighting)
+### [IMPORTANT] Please in the end of .zshrc
+### ============================================
+if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+        source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
