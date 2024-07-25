@@ -3,10 +3,13 @@ PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{g
 # PS1="%F{247}[%f%B%F{154}%n%f%b@%B%F{81}%M%f%b%F{247}:%f%B%F{231}%~%f%b%F{247}]%f"   # 256 colors
 
 ### ============================================
-### Syntax Highlighting (apt-get install zsh-syntax-highlighting)
+### Syntax Highlighting (apt-get install zsh-syntax-highlighting zsh-autosuggestions)
 ### ============================================
 if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
         source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # bindkey "$terminfo[kcuu1]" history-substring-search-up

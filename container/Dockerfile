@@ -21,7 +21,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates gpg \
     less curl wget make git mg stow \
-    zsh zsh-syntax-highlighting \
+    zsh zsh-syntax-highlighting zsh-autosuggestions \
     graphicsmagick libfontconfig1 libharfbuzz0b libfribidi0
 
 # Install qemacs

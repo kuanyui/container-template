@@ -1,4 +1,4 @@
-### ============================================
+\### ============================================
 ### Prompts
 ### ============================================
 PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{gray}]%F{yellow}%#%f%b (%D{%Y-%m-%d %H:%M:%S}) "
@@ -17,10 +17,13 @@ PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{g
 PATH=${HOME}/.local/bin:${PATH}
 
 ### ============================================
-### Syntax Highlighting (apt-get install zsh-syntax-highlighting)
+### Syntax Highlighting (apt-get install zsh-syntax-highlighting zsh-autosuggestions)
 ### ============================================
 if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
         source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+        source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -114,5 +117,3 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
-
-
