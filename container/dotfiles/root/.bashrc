@@ -11,9 +11,6 @@ alias sc="sudo systemctl"
 alias jc="sudo journalctl"
 alias jc-clear="sudo journalctl --vacuum-time=5d"   #  Delete journal logs which are older than 5 days
 
-alias nvv='nvm ls'
-alias nv='nvm version'
-
 alias ..='cd ..'
 alias ...='cd ../../'
 alias ....='cd ../../../'
