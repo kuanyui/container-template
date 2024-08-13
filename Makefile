@@ -20,7 +20,11 @@ CONTAINER_NAME = example_container
 
 help:     ## Show this self-documented help message.
 	@#grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-	@awk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*## *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST)
+	@if command -v perl >/dev/null 2>&1; then \
+		perl -ne 'if (/^([a-zA-Z_-]+):.*?## (.*)$$/) { printf "\033[36m%-30s\033[0m %s\n", $$1, $$2; } elsif (/^[ \t]*## *(.*)/) { print "$$1\n"; }' $(MAKEFILE_LIST); \
+	else \
+		gawk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*## *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
+	fi
 
 watch:     ## Watch for development
 	@echo "[NOT IMPLEMENT] Please do what you want here!"
