@@ -5,7 +5,9 @@ UID := $(shell id -u)
 GID := $(shell id -g)
 
 APP_NAME = example_app
+## This will becomes the name of the built Image.
 IMAGE_NAME = example_image
+## This will becomes the name of the created Container.
 CONTAINER_NAME = example_container
 
 # ███╗   ███╗ █████╗ ██╗███╗   ██╗
@@ -14,16 +16,31 @@ CONTAINER_NAME = example_container
 # ██║╚██╔╝██║██╔══██║██║██║╚██╗██║
 # ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║
 # ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
-##
-## These targets can be run in host, also inside container:
-##
+###
+### These targets can be run in host, also inside container:
+###
 
 help:     ## Show this self-documented help message.
-	@#grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@# Some operating system / Linux distro may use `mawk` (e.g. Ubuntu), so prefer more portable `perl` over `awk`.
+	@export S=`basename $${SHELL}`; if [ $${S} != "zsh" ] && [ $${S} != "fish" ]; then echo "(Tip: You are using \`$${S}\`, but you can consider to use \`zsh\` or \`fish\` because they support tab compoletions for Makefile targets & variables.)"; fi
 	@if command -v perl >/dev/null 2>&1; then \
-		perl -ne 'if (/^([a-zA-Z_-]+):.*?## (.*)$$/) { printf "\033[36m%-30s\033[0m %s\n", $$1, $$2; } elsif (/^[ \t]*## *(.*)/) { print "$$1\n"; }' $(MAKEFILE_LIST); \
+		echo ------------------------ ; \
+		echo Variables ; \
+		echo ------------------------ ; \
+		perl -ne 'if (/^## /) { $$comment = $$_; $$next = <>; if ($$next =~ /^([A-Za-z0-9_]+)\s*=\s*(.*)$$/) { printf "\033[35m%-30s\033[0m %s", $$1, substr($$comment, 3); } }' $(MAKEFILE_LIST); \
+		echo ------------------------ ; \
+		echo Targets ; \
+		echo ------------------------ ; \
+		perl -ne 'if (/^([a-zA-Z_-]+):.*?## (.*)$$/) { printf "\033[36m%-30s\033[0m %s\n", $$1, $$2; } elsif (/^[ \t]*### *(.*)/) { print "$$1\n"; }' $(MAKEFILE_LIST); \
 	else \
-		gawk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*## *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
+		echo ------------------------ ; \
+		echo Variables ; \
+		echo ------------------------ ; \
+		gawk '/^## /{comment=$$0; getline; if ($$1 ~ /^[A-Za-z0-9_]+$$/) printf "\033[35m%-30s\033[0m %s\n", $$1, substr(comment, 4)}' $(MAKEFILE_LIST) ; \
+		echo ------------------------ ; \
+		echo Targets ; \
+		echo ------------------------ ; \
+		gawk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*### *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
 	fi
 
 watch:     ## Watch for development
@@ -38,9 +55,9 @@ build:     ## Build the project
 # ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██║██║██║╚██╗██║██╔══╝  ██╔══██╗
 # ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║██║ ╚████║███████╗██║  ██║
 #  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
-##
-## These targets are to manipulate container, therefore, can only be run in host:
-##
+###
+### These targets are to manipulate container, therefore, can only be run in host:
+###
 
 # --------------------------------------------------------------
 
