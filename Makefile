@@ -27,7 +27,7 @@ help:     ## Show this self-documented help message.
 		echo ------------------------ ; \
 		echo Variables ; \
 		echo ------------------------ ; \
-		perl -ne 'if (/^## /) { $$comment = $$_; $$next = <>; if ($$next =~ /^([A-Za-z0-9_]+)\s*=\s*(.*)$$/) { printf "\033[35m%-30s\033[0m %s", $$1, substr($$comment, 3); } }' $(MAKEFILE_LIST); \
+		perl -ne 'if (/^## /) { $$comment = $$_; $$next = <>; if ($$next =~ /^([A-Za-z0-9_]+)\s*[:?+]?=\s*(.*)$$/) { printf "\033[35m%-30s\033[0m %s", $$1, substr($$comment, 3); } }' $(MAKEFILE_LIST); \
 		echo ------------------------ ; \
 		echo Targets ; \
 		echo ------------------------ ; \
@@ -36,7 +36,7 @@ help:     ## Show this self-documented help message.
 		echo ------------------------ ; \
 		echo Variables ; \
 		echo ------------------------ ; \
-		gawk '/^## /{comment=$$0; getline; if ($$1 ~ /^[A-Za-z0-9_]+$$/) printf "\033[35m%-30s\033[0m %s\n", $$1, substr(comment, 4)}' $(MAKEFILE_LIST) ; \
+		gawk '/^## /{comment=$$0; getline; if ($$1 ~ /^[A-Za-z0-9_]+$$/ && match($$0, /^[^:?+]*[:?+]?=/, m)) printf "\033[35m%-30s\033[0m %s\n", $$1, substr(comment, 4)}' $(MAKEFILE_LIST) ; \
 		echo ------------------------ ; \
 		echo Targets ; \
 		echo ------------------------ ; \
