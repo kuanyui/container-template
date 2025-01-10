@@ -31,7 +31,7 @@ help:     ## Show this self-documented help message.
 		echo ------------------------ ; \
 		echo Targets ; \
 		echo ------------------------ ; \
-		perl -ne 'if (/^([a-zA-Z_-]+):.*?## (.*)$$/) { printf "\033[36m%-30s\033[0m %s\n", $$1, $$2; } elsif (/^[ \t]*### *(.*)/) { print "$$1\n"; }' $(MAKEFILE_LIST); \
+		perl -ne 'if (/^([a-zA-Z0-9_-]+):.*?## (.*)$$/) { printf "\033[36m%-30s\033[0m %s\n", $$1, $$2; } elsif (/^[ \t]*### *(.*)/) { print "$$1\n"; }' $(MAKEFILE_LIST); \
 	else \
 		echo ------------------------ ; \
 		echo Variables ; \
@@ -40,7 +40,7 @@ help:     ## Show this self-documented help message.
 		echo ------------------------ ; \
 		echo Targets ; \
 		echo ------------------------ ; \
-		gawk 'match($$0, /^([a-zA-Z_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*### *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
+		gawk 'match($$0, /^([a-zA-Z0-9_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*### *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
 	fi
 
 watch:     ## Watch for development
