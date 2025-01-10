@@ -4,6 +4,9 @@ FROM --platform=linux/amd64 debian:bookworm
 # Docker only. Don't supported by Podman / OCI.
 # SHELL ["/bin/bash", "-c"]
 
+# enable 256 color (seems unworkable)
+ENV TERM=xterm-256color
+
 # - Actually has no effect unless use `--publish-all (or `-P`) are used on `podman run`, which forwards to all exposed ports from random host ports.
 # - To forward specific ports from the host into the container, use `podman run --publish 58000:8000/tcp` instead.
 EXPOSE 8000/tcp
