@@ -4,6 +4,7 @@ SHELL = /bin/bash
 UID := $(shell id -u)
 GID := $(shell id -g)
 
+## (Unused currently, actually.)
 APP_NAME = example_app
 ## This will becomes the name of the built Image.
 IMAGE_NAME = example_image
