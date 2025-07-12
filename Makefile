@@ -106,7 +106,7 @@ c-build:   ## [Container] Build Image from Dockerfile
 	@echo "Build Image from Dockerfile"
 	@echo "=============================================================="
 	# Podman always add localhost/ prefix if no prefix is set, so add it explicitly for docker.
-	BUILDAH_LAYERS=true docker build --tag localhost/${IMAGE_NAME} ./container
+	BUILDAH_LAYERS=true $(_CONTAINER_ENGINE_CMD) build --tag localhost/${IMAGE_NAME} ./container
 
 c-run:     ## [Container] Initialize the built Image into a running Container
 	@echo "=============================================================="
