@@ -4,7 +4,7 @@
 
 PS1='\[\e[1;32m\]\u@\h\[\e[m\]:\[\e[1;34m\]\W\[\e[1;33m\]\$\[\e[m\] '
 
-PATH=${HOME}/.local/bin:${PATH}
+PATH=${HOME}/.local/npm_global/bin:${HOME}/.local/bin:${PATH}
 
 alias sz="source ~/.bashrc"
 alias ll='ls -al --color=auto '

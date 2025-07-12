@@ -23,9 +23,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 # Some libraries are for rendering text in `magick`.
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends ca-certificates gpg \
-    less curl wget make git mg stow procps \
-    zsh zsh-syntax-highlighting zsh-autosuggestions \
-    graphicsmagick libfontconfig1 libharfbuzz0b libfribidi0
+    nodejs npm \
+    less curl wget make git mg procps \
+    zsh zsh-syntax-highlighting zsh-autosuggestions
 
 # Install qemacs
 RUN echo 'deb http://download.opensuse.org/repositories/home:/tarcjf/Debian_12/ /' | tee /etc/apt/sources.list.d/home:tarcjf.list && \
@@ -61,34 +61,10 @@ RUN mkdir -p \
     ~/.local/lib \
     ~/.local/include
 
-# A unified folder for GNU Stow
-RUN mkdir -p ~/stow
+RUN mkdir -p ~/.local/npm_global; \
+    npm config set prefix ~/.local/npm_global
 
-# ------------------------------
-
-# Node.js (Didn't install node via `apt` because the version may not match the project's requirement)
-# https://github.com/nvm-sh/nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || true
-# Install Node.js v14.20.0
-RUN /bin/bash -c "source ~/.bashrc && nvm install v14.20.0"
-
-# ------------------------------
-
-# Don't install `imagemagick` via `apt`, because Debian 12/Ubuntu 23.10 are
-# still providing `imagemagick 6.9` released in 2016, which is lacks of `magick`
-# commands available since 7.x. We will install official AppImage binary of
-# `imagemagick` from Github https://github.com/ImageMagick/ImageMagick/releases
-#
-# . https://github.com/ImageMagick/ImageMagick/releases
-
-RUN cd ~/stow && \
-    wget --output-document ./tmpAppImg "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-29/ImageMagick--gcc-x86_64.AppImage" && \
-    chmod +x ./tmpAppImg && \
-    ./tmpAppImg --appimage-extract && \
-    mv squashfs-root imagemagick && \
-    rm ./tmpAppImg && \
-    stow --dir ~/stow/imagemagick --target ~/.local/ usr
-
+RUN npm install -g @anthropic-ai/claude-code
 # ------------------------------
 
 # Please remember to mount the project folder of host onto container via `podman run --volume=$HOST_PROJ_DIR:/home/user/MAIN`

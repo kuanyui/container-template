@@ -4,12 +4,29 @@ SHELL = /bin/bash
 UID := $(shell id -u)
 GID := $(shell id -g)
 
-## (Unused currently, actually.)
-APP_NAME = example_app
-## This will becomes the name of the built Image.
-IMAGE_NAME = example_image
-## This will becomes the name of the created Container.
-CONTAINER_NAME = example_container
+##  Project name
+PROJECT_NAME =
+## Project folder path
+PROJECT_PATH =
+## (optional) This will becomes the name of the built Image.
+IMAGE_NAME = claude_code_image__$(PROJECT_NAME)
+## (optional) This will becomes the name of the created Container.
+CONTAINER_NAME = claude_code_container__$(PROJECT_NAME)
+
+ifeq ($(strip $(PROJECT_NAME)),)
+$(error You must specify PROJECT_NAME. Usage: make PROJECT_NAME=myproj)
+endif
+
+# Check if PROJECT_PATH is set
+ifeq ($(strip $(PROJECT_PATH)),)
+$(error You must specify PROJECT_PATH. Usage: make PROJECT_PATH=/path/to/your/myproj)
+endif
+
+ifeq ($(shell [ -d "$(PROJECT_PATH)" ] && echo yes || echo no),no)
+$(error PROJECT_PATH '$(PROJECT_PATH)' does not exist or is not a directory)
+else
+PROJECT_PATH_ABS = $(shell realpath "$(PROJECT_PATH)")
+endif
 
 # ███╗   ███╗ █████╗ ██╗███╗   ██╗
 # ████╗ ████║██╔══██╗██║████╗  ██║
@@ -44,24 +61,6 @@ help:     ## Show this self-documented help message.
 		gawk 'match($$0, /^([a-zA-Z0-9_-]+):.*?## (.*)$$/, m){printf "\033[36m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*### *(.*)/, m){printf "%s\n", m[1]}' $(MAKEFILE_LIST); \
 	fi
 
-watch:     ## Watch for development
-	@echo "[NOT IMPLEMENT] Please do what you want here!"
-
-build:     ## Build the project
-	@echo "[NOT IMPLEMENT] Please do what you want here!"
-
-#  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗███████╗██████╗
-# ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██║████╗  ██║██╔════╝██╔══██╗
-# ██║     ██║   ██║██╔██╗ ██║   ██║   ███████║██║██╔██╗ ██║█████╗  ██████╔╝
-# ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██║██║██║╚██╗██║██╔══╝  ██╔══██╗
-# ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║██║ ╚████║███████╗██║  ██║
-#  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
-###
-### These targets are to manipulate container, therefore, can only be run in host:
-###
-
-# --------------------------------------------------------------
-
 # Compatibility of podman & docker (prefer `podman`)
 _CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1 ; then echo "PODMAN"; else echo "DOCKER"; fi)
 
@@ -93,7 +92,9 @@ c-env:   ## [Container] Display enviromnent variables for podman / docker
 	@echo "UID:              ${UID}"
 	@echo "GID:              ${GID}"
 	@echo "========================================"
-	@echo "APP_NAME:         ${APP_NAME}"
+	@echo "PROJECT_NAME:     ${PROJECT_NAME}"
+	@echo "PROJECT_PATH:     ${PROJECT_PATH} (${PROJECT_PATH_ABS})"
+	@echo "========================================"
 	@echo "IMAGE_NAME:       ${IMAGE_NAME}"
 	@echo "CONTAINER_NAME:   ${CONTAINER_NAME}"
 	@echo "========================================"
@@ -116,7 +117,7 @@ c-run:     ## [Container] Initialize the built Image into a running Container
 	    $(_CONTAINER_ENGINE_RUN_ARGS) \
 	    --hostname ${CONTAINER_NAME} \
 	    --publish 58000:8000/tcp \
-	    --volume "${CURDIR}:/home/user/MAIN" \
+	    --volume "${PROJECT_PATH}:/home/user/MAIN" \
 	    localhost/${IMAGE_NAME}
 
 
@@ -152,8 +153,8 @@ c-zsh-root: c-start      ## [Container] Run zsh as root in container
 	$(_CONTAINER_ENGINE_CMD) exec --interactive --tty --user root ${CONTAINER_NAME} /bin/zsh
 
 
-# c-app-init: c-start       ## [Container] Install dependencies of app
-# 	$(_CONTAINER_ENGINE_CMD) exec --interactive --tty --user user --workdir /home/user/MAIN ${CONTAINER_NAME} bash -c "source ~/.bashrc && npm install"
+c-claude: c-start       ## [Container] Run claude-code
+	$(_CONTAINER_ENGINE_CMD) exec --interactive --tty --user user --workdir /home/user/MAIN ${CONTAINER_NAME} npx claude
 #
 #
 # c-app-watch: c-start      ## [Container] Start app

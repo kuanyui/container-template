@@ -14,7 +14,7 @@ PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{g
 # - This is not existed in Debian's Docker Image by default, so should be
 #   created in Dockfile manually.
 # - See https://unix.stackexchange.com/questions/316765
-PATH=${HOME}/.local/bin:${PATH}
+PATH=${HOME}/.local/npm_global/bin:${HOME}/.local/bin:${PATH}
 
 ### ============================================
 # [Backspace] don't seem / as part of word.
