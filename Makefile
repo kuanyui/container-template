@@ -63,7 +63,7 @@ build:     ## Build the project
 # --------------------------------------------------------------
 
 # Compatibility of podman & docker (prefer `podman`)
-_CONTAINER_ENGINE := $(shell if docker -v 2>&1 | grep -q "podman" ; then echo "PODMAN"; else echo "DOCKER"; fi)
+_CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1 ; then echo "PODMAN"; else echo "DOCKER"; fi)
 
 ifeq ($(_CONTAINER_ENGINE), PODMAN)
 	_CONTAINER_ENGINE_CMD := "podman"
@@ -76,6 +76,11 @@ else
 	_CONTAINER_ENGINE_CMD := "docker"
 	_CONTAINER_ENGINE_RUN_ARGS :=
 endif
+
+# For debug (print Makefile variable)
+# $(info _CONTAINER_ENGINE = $(_CONTAINER_ENGINE))
+# $(info _CONTAINER_ENGINE_CMD = $(_CONTAINER_ENGINE_CMD))
+
 
 # --------------------------------------------------------------
 
