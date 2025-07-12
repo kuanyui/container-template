@@ -21,7 +21,7 @@ Can be easily `git clone` and modified for a new project.
 - Timezone is set to `Asia/Taipei`.
 
 ## Users & Permissions
-- `.bashrc` and `.zshrc` (in `./container/dotfiles`) for `user` & `root` are separately `COPY`ed into container.
+- `.bashrc` and `.zshrc` (in `./container-files/dotfiles`) for `user` & `root` are separately `COPY`ed into container.
 - Default user is `user` (`UID` = 1000) instead of `root`, for security concerning.
     - (Podman) `user` will be mapped to the host's current user.
 - Host's Makefile's `$(CURDIR)` (the root directory path of this project) is mounted in container's `/home/user/MAIN`
