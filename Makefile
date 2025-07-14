@@ -4,7 +4,8 @@ SHELL = /bin/bash
 UID := $(shell id -u)
 GID := $(shell id -g)
 
-##  Project name
+
+## Project name
 PROJECT_NAME =
 ## Project folder path
 PROJECT_PATH =
@@ -13,6 +14,17 @@ IMAGE_NAME = claude_code_image__$(PROJECT_NAME)
 ## (optional) This will becomes the name of the created Container.
 CONTAINER_NAME = claude_code_container__$(PROJECT_NAME)
 
+
+_VALIDATE_VARS = true
+ifeq ($(MAKECMDGOALS),help)    # Skip variable checks if target is 'help'
+_VALIDATE_VARS = false
+endif
+ifeq ($(MAKECMDGOALS),)    # Skip variable checks if target is empty
+_VALIDATE_VARS = false
+endif
+
+
+ifeq ($(_VALIDATE_VARS),true)
 ifeq ($(strip $(PROJECT_NAME)),)
 $(error You must specify PROJECT_NAME. Usage: make PROJECT_NAME=myproj)
 endif
@@ -27,6 +39,8 @@ $(error PROJECT_PATH '$(PROJECT_PATH)' does not exist or is not a directory)
 else
 PROJECT_PATH_ABS = $(shell realpath "$(PROJECT_PATH)")
 endif
+endif  # if _VALIDATE_VARS ends here
+
 
 # ███╗   ███╗ █████╗ ██╗███╗   ██╗
 # ████╗ ████║██╔══██╗██║████╗  ██║
