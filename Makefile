@@ -130,7 +130,6 @@ c-run:     ## [Container] Initialize the built Image into a running Container
 	$(_CONTAINER_ENGINE_CMD) run --name ${CONTAINER_NAME} --detach --tty \
 	    $(_CONTAINER_ENGINE_RUN_ARGS) \
 	    --hostname ${CONTAINER_NAME} \
-	    --publish 58000:8000/tcp \
 	    --volume "${PROJECT_PATH}:/home/user/MAIN" \
 	    localhost/${IMAGE_NAME}
 
