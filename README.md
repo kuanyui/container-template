@@ -1,5 +1,5 @@
 # Container Template
-Some minimalized template of **`Makefile` + `Dockerfile` + `dotfiles/`** with `podman` & `docker` (mainly tested with `podman`), to setup a container for my personal projects.
+Some minimalized templates of **`Makefile` + `Dockerfile` + `dotfiles/`** with `podman` & `docker` (mainly tested with `podman`), to setup a container for my personal projects.
 
 Can be easily `git clone`, copied, and modified for a new project.
 

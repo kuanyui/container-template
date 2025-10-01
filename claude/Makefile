@@ -20,10 +20,10 @@ endef
 #  ╚████╔╝ ██║  ██║██║  ██║███████║    ██████╔╝███████╗╚██████╗███████╗██║  ██║██║  ██║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║███████║
 #   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝    ╚═════╝ ╚══════╝ ╚═════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 
-## (Required) Project name
+## (Required) Project name.
 PROJECT_NAME =
 
-## (Required) Project folder path
+## (Required) Project folder path in host. This folder will be mounted into `/home/user/MAIN` in container.
 PROJECT_PATH =
 
 ## (Optional) This will becomes the name of the built Image. (default: `claude_code_image__${PROJECT_NAME}`)
