@@ -1,7 +1,7 @@
 # Container Template
-A minimalized template of **`Makefile` + `Dockerfile` + `dotfiles/`** with `podman` & `docker` (mainly tested with `podman`), to setup a container for my personal projects.
+Some minimalized template of **`Makefile` + `Dockerfile` + `dotfiles/`** with `podman` & `docker` (mainly tested with `podman`), to setup a container for my personal projects.
 
-Can be easily `git clone` and modified for a new project.
+Can be easily `git clone`, copied, and modified for a new project.
 
 # Requirements
 > [!IMPORTANT]
@@ -17,11 +17,10 @@ Can be easily `git clone` and modified for a new project.
 
 # Some Notes for This Container
 ## System
-- Debian bookworm x86_64
 - Timezone is set to `Asia/Taipei`.
 
 ## Users & Permissions
-- `.bashrc` and `.zshrc` (in `./container-files/dotfiles`) for `user` & `root` are separately `COPY`ed into container.
+- `.bashrc` and `.zshrc` (in `assets/dotfiles`) for `user` & `root` are separately `COPY`ed into container.
 - Default user is `user` (`UID` = 1000) instead of `root`, for security concerning.
     - (Podman) `user` will be mapped to the host's current user.
 - Host's Makefile's `$(CURDIR)` (the root directory path of this project) is mounted in container's `/home/user/MAIN`
