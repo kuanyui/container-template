@@ -5,6 +5,13 @@ PS1="%F{gray}[%f%B%F{green}%n%f%b@%B%F{blue}%M%f%b%F{gray}:%f%B%F{red}%~%f%b%F{g
 # PS1='%B%F{green}%n@%m%f:%F{blue}%~%F{yellow}%#%f%b '  # HOST ROOT
 # PS1="%F{247}[%f%B%F{154}%n%f%b@%B%F{81}%M%f%b%F{247}:%f%B%F{231}%~%f%b%F{247}]%f"   # 256 colors
 
+# Prevent Emacs TRAMP from failed to match the shell prompt.
+if [ "$TERM" = "dumb" ]; then
+    PS1='$ '
+    unset PROMPT_COMMAND
+    [ -n "$ZSH_VERSION" ] && unsetopt zle 2>/dev/null
+fi
+
 ### ============================================
 # [Backspace] don't seem / as part of word.
 # https://stackoverflow.com/a/1438523/1244729
