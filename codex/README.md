@@ -16,8 +16,9 @@ Use `codex` in Podman or Docker container, to avoid potential dangerous actions.
 > # run codex in container
 > make -f ~/container-template/codex/Makefile PROJECT_NAME=my_project PROJECT_PATH=~/my_project c-codex
 >
-> # Use `links2` browser in container to finish the authentication to openai
 >```
+>
+> **⚠️ Then use `links2` browser in container to finish the authentication to openai**
 
 # OS
 - Debian 12 (bookworm) x86_64
