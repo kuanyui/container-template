@@ -1,0 +1,22 @@
+# -*- mode: conf -*-
+module local_container_virtiofs 1.0;
+
+# Define the types and classes required for this policy
+require {
+    type container_t;    # The SELinux context that Podman containers run in
+    type virtiofs_t;     # The SELinux context assigned to virtiofs mount points
+    class dir { read write open getattr search add_name remove_name ioctl lock rmdir relabelfrom relabelto create setattr };
+    class file { read write create open getattr setattr unlink rename ioctl lock append map execute relabelfrom relabelto };
+    class lnk_file { read getattr setattr create unlink rename relabelfrom relabelto };
+}
+
+# =========================================================================
+# Allow the container process (container_t) to access directories labeled as virtiofs_t.
+# =========================================================================
+allow container_t virtiofs_t:dir { read write open getattr search add_name remove_name ioctl lock rmdir relabelfrom relabelto create setattr };
+
+# =========================================================================
+# Allow the container process (container_t) to access files labeled as virtiofs_t.
+# =========================================================================
+allow container_t virtiofs_t:file { read write create open getattr setattr unlink rename ioctl lock append map execute relabelfrom relabelto };
+allow container_t virtiofs_t:lnk_file { read getattr setattr create unlink rename relabelfrom relabelto };

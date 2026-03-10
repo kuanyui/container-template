@@ -66,7 +66,7 @@ _PROJECT_PATH_EXPANDED := $(shell echo $(PROJECT_PATH))
 PROJECT_PATH_ABS := $(shell realpath "$(_PROJECT_PATH_EXPANDED)" 2>/dev/null)
 
 ifeq ($(shell [ -d "$(PROJECT_PATH_ABS)" ] && echo yes || echo no),no)
-$(error You've specified PROJECT_PATH='$(PROJECT_PATH)' ('$(PROJECT_PATH_ABS)') but it is not existed or is not a directory)
+$(error You have specified PROJECT_PATH='$(PROJECT_PATH)' ('$(PROJECT_PATH_ABS)') but it is not existed or is not a directory)
 endif
 endif  # if _VALIDATE_VARS ends here
 
@@ -135,6 +135,25 @@ help:     ## Show this self-documented help message.
 		printf "\033[36m=============================================================\033[0m\n" ; \
 		gawk 'match($$0, /^([a-zA-Z0-9_-]+):.*?## (.*)$$/, m){printf "\033[32m%-30s\033[0m %s\n", m[1], m[2]} match($$0, /^[ \\t]*### *(.*)/, m){printf "\033[34m%s\033[0m\n", m[1]}' $(MAKEFILE_LIST); \
 	fi
+
+###
+### - SELinux Host: Only for host with SELinux enabled.
+###
+
+selinux-install-modules selinux-uninstall-modules: MOD_DIR := assets/selinux
+selinux-install-modules selinux-uninstall-modules: MOD_NAME := local_container_virtiofs
+selinux-install-modules:    ## [SELinux] Install module `local_container_virtiofs` to allow `container_t` to access `virtiofs_t`, for SELinux + Podman + Virtiofs in KVM
+	# Compile the policy into a kernel-readable module
+	checkmodule -M -m -o $(MOD_DIR)/$(MOD_NAME).mod $(MOD_DIR)/$(MOD_NAME).te
+	# Package the module into a policy package (.pp)
+	semodule_package -o $(MOD_DIR)/$(MOD_NAME).pp -m $(MOD_DIR)/$(MOD_NAME).mod
+	# Inject the policy into the running kernel
+	sudo semodule -i $(MOD_DIR)/$(MOD_NAME).pp
+	# Delete compiled modules
+	rm $(MOD_DIR)/$(MOD_NAME).mod $(MOD_DIR)/$(MOD_NAME).pp
+
+selinux-uninstall-modules:   ## [SELinux] Uninstall module `local_container_virtiofs`.
+	sudo semodule -r $(MOD_NAME)
 
 
 #  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗███████╗██████╗      ██████╗ ██████╗ ███╗   ███╗███╗   ███╗ █████╗ ███╗   ██╗██████╗ ███████╗
