@@ -1,0 +1,53 @@
+{
+  "files.associations": {
+    // "**/_common/bash/**/*": "shellscript",
+    // "**/_common/zsh/**/*": "shellscript",
+    "**/_common/docker/**/*": "dockerfile",
+  },
+  // Highlight Jinja2 syntax in all files if `fabiospampinato.vscode-highlight` is installed.
+  "highlight.regexes": {
+    // standard Jinja2 delimiters {% if %} {{ var }} {# comment #}
+    // "([{]%) *([a-zA-Z0-9]+) *?(.*?)? *?(%[}])": [
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    //   { "color": "#ff66aa", "fontWeight": "bold" },
+    //   { "fontWeight": "bold" },
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    // ],
+    // "([{][{])(.*?)?([}][}])": [
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    //   { "fontWeight": "bold" },
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    // ],
+    // "([{]#)(.*?)(#[}])": [
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    //   { "fontWeight": "bold" },
+    //   { "color": "#ff99cc", "fontWeight": "bold" },
+    // ],
+    // custom Jinja2 delimiters #{% if %}# #{{ var }}# #{# comment #}#
+    "(#[{]%) *([a-zA-Z0-9]+) *?(.*?)? *?(%[}]#)": {
+      "filterLanguageRegex": "(dockerfile)",
+      "decorations": [
+        { "color": "#ee88ff", "fontWeight": "bold" },
+        { "color": "#aa66cc", "fontWeight": "bold" },
+        { "fontWeight": "bold" },
+        { "color": "#ee88ff", "fontWeight": "bold" },
+      ],
+    },
+    "(#[{][{])(.*?)?([}][}]#)": {
+      "filterLanguageRegex": "(dockerfile)",
+      "decorations": [
+        { "color": "#ee88ff", "fontWeight": "bold" },
+        { "fontWeight": "bold" },
+        { "color": "#ee88ff", "fontWeight": "bold" },
+      ],
+    },
+    "(#[{]#)(.*?)(#[}]#)": {
+      "filterLanguageRegex": "(dockerfile)",
+      "decorations": [
+        { "color": "#ee88ff", "fontWeight": "bold" },
+        { "fontWeight": "bold" },
+        { "color": "#ee88ff", "fontWeight": "bold" },
+      ],
+    },
+  },
+}
