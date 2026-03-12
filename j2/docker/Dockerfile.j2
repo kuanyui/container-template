@@ -1,5 +1,7 @@
+{% import "lib/macros.js" as macros %}
+
 # Remember to explicitly specify the platform...
-FROM --platform=linux/amd64 debian:12
+FROM --platform={{ ctx.image_platform }} {{ ctx.image_name }}
 
 # Docker only. Don't supported by Podman / OCI.
 # SHELL ["/bin/bash", "-c"]
@@ -10,24 +12,16 @@ ENV TERM=xterm-256color
 # - Actually has no effect unless use `--publish-all (or `-P`) are used on `podman run`, which forwards to all exposed ports from random host ports.
 # - To forward specific ports from the host into the container, use `podman run --publish 58000:8000/tcp` instead.
 EXPOSE 8000/tcp
+{% if ctx.tz %}
+  {% macros.set_tz(ctx) %}
+{% endif %}
 
-#{% if tz %}#
-# - /etc/timezone is a human-readable text file.
-# - /etc/localtime is a symlink to a binary file in `/usr/share/zoneinfo/**`
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    export TZ="{{ tz }}" && \
-    echo "${TZ}" > /etc/timezone && \
-    ln -fs "/usr/share/zoneinfo/${TZ}" /etc/localtime && \
-    dpkg-reconfigure --frontend noninteractive tzdata
-#{% endif %}#
-
-#{%
+{%
   set pkgs = [
-    'ca-certificates', 'gpg',
     'less', 'curl', 'wget', 'make', 'git', 'mg', 'procps',
     'zsh', 'zsh-syntax-highlighting', 'zsh-autosuggestions'
     ]
-%}#
+%}
 
 # Some basic packages
 # Some libraries are for rendering text in `magick`.
@@ -35,15 +29,11 @@ RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
     ca-certificates gpg \
     less curl wget make git mg procps \
-    zsh zsh-syntax-highlighting zsh-autosuggestions #{% block extra_pkgs %}##{% endblock %}# #{% if install_node_via_distro %}# nodejs npm #{% endif %}#
+    zsh zsh-syntax-highlighting zsh-autosuggestions
 
-#{% if install_qemacs %}#
-# Install qemacs
-RUN echo 'deb http://download.opensuse.org/repositories/home:/tarcjf/Debian_12/ /' | tee /etc/apt/sources.list.d/home:tarcjf.list && \
-    curl -fsSL https://download.opensuse.org/repositories/home:tarcjf/Debian_12/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/home_tarcjf.gpg > /dev/null && \
-    apt update && \
-    apt install --yes --no-install-recommends qemacs
-#{% endif %}#
+{% if 'qemacs' in ctx.feature_presets %}
+  {% macros.install_qemacs(ctx) %}
+{% endif %}
 
 # Create a non-previleged user (for safety), along with its home directory
 RUN groupadd -g 1000 user
@@ -73,10 +63,15 @@ RUN mkdir -p \
     ~/.local/lib \
     ~/.local/include
 
+{% if ctx.nodejs %}
 RUN mkdir -p ~/.local/npm_global; \
     npm config set prefix ~/.local/npm_global
 
-RUN npm install -g @openai/codex
+{% if ctx.nodejs.npm_global_pkgs %}
+RUN npm install -g {{ ctx.nodejs.npm_global_pkgs | join(' ') }}
+{% endif %}
+{% endif %}
+
 # ------------------------------
 
 # Please remember to mount the project folder of host onto container via `podman run --volume=$HOST_PROJ_DIR:/home/user/MAIN`
