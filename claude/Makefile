@@ -184,6 +184,7 @@ c-env:   ## [Container] Display enviromnent variables for podman / docker
 	@echo "========================================"
 	@echo "PROJECT_NAME:      ${PROJECT_NAME}"
 	@echo "PROJECT_PATH:      ${PROJECT_PATH} (${PROJECT_PATH_ABS})"
+	@echo "HIDE_GIT_DIR:      ${HIDE_GIT_DIR}"
 	@echo "========================================"
 	@echo "IMAGE_NAME:        ${IMAGE_NAME}"
 	@echo "CONTAINER_NAME:    ${CONTAINER_NAME}"
