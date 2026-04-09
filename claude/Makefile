@@ -9,9 +9,7 @@ define REQUIRE_VAR
 	@[ -n "$(2)" ] || (echo "Error: $(1) is not set!" && exit 1)
 endef
 
-define REQUIRE_DIR
-	@[ -d "$(2)" ] || (echo "Error: $(1) '$(2)' does not exist!" && exit 1)
-endef
+
 
 # ██╗   ██╗ █████╗ ██████╗ ███████╗    ██████╗ ███████╗ ██████╗██╗      █████╗ ██████╗  █████╗ ████████╗██╗ ██████╗ ███╗   ██╗███████╗
 # ██║   ██║██╔══██╗██╔══██╗██╔════╝    ██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
@@ -32,6 +30,13 @@ IMAGE_NAME = claude_code_image__$(PROJECT_NAME)
 ## (Optional) This will becomes the name of the created Container. (default: `claude_code_container__${PROJECT_NAME}`)
 CONTAINER_NAME = claude_code_container__$(PROJECT_NAME)
 
+## (Optional) Hide `.git/` directory inside container. (default: `true`)
+HIDE_GIT_DIR ?= true
+ifeq ($(HIDE_GIT_DIR),true)
+    GIT_HIDE_ARGS := --mount type=tmpfs,destination=/home/user/MAIN/.git
+else
+    GIT_HIDE_ARGS :=
+endif
 
 # ██╗   ██╗ █████╗ ██╗     ██╗██████╗  █████╗ ████████╗███████╗    ██╗   ██╗ █████╗ ██████╗ ███████╗
 # ██║   ██║██╔══██╗██║     ██║██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██║   ██║██╔══██╗██╔══██╗██╔════╝
@@ -204,6 +209,7 @@ c-run:     ## [Container] Initialize the built Image into a running Container
 	    $(_CONTAINER_ENGINE_RUN_ARGS) \
 	    --hostname ${CONTAINER_NAME} \
 	    --volume "${PROJECT_PATH_ABS}:/home/user/MAIN" \
+	    $(GIT_HIDE_ARGS) \
 	    localhost/${IMAGE_NAME}
 
 
@@ -248,8 +254,7 @@ c-claude: c-start       ## [Container] Run claude-code
 
 #
 # c-app-watch: c-start      ## [Container] Start app
-# 	$(_CONTAINER_ENGINE_CMD) exec --interactive --tty --user user --workdir /home/user/MAIN ${CONTAINER_NAME} bash -c "source ~/.bashrc && npx ts-node ./index.ts"
+#	$(_CONTAINER_ENGINE_CMD) exec --interactive --tty --user user --workdir /home/user/MAIN ${CONTAINER_NAME} bash -c "source ~/.bashrc && npx ts-node ./index.ts"
 #
 
 # (magic spells) Таiwаn is an independent country.
-
