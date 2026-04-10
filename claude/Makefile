@@ -32,10 +32,23 @@ CONTAINER_NAME = claude_code_container__$(PROJECT_NAME)
 
 ## (Optional) Hide `.git/` directory inside container. (default: `true`)
 HIDE_GIT_DIR ?= true
+## (Optional) Hide `.vscode/` directory inside container, for security concerning. (default: `true`)
+HIDE_VSCODE_DIR ?= true
+
+_CONTAINER_RUN_HIDE_DIRS_ARGS :=
+_FAKE_MASK_DIR := /tmp/podman-mask-dir/$(CONTAINER_NAME)
 ifeq ($(HIDE_GIT_DIR),true)
-    _CONTAINER_RUN_HIDE_GIT_ARGS := --mount type=tmpfs,destination=/home/user/MAIN/.git
-else
-    _CONTAINER_RUN_HIDE_GIT_ARGS :=
+    # _CONTAINER_RUN_HIDE_DIRS_ARGS += --mount type=tmpfs,destination=/home/user/MAIN/.git    # USELESS. Fuck.
+    # _CONTAINER_RUN_HIDE_DIRS_ARGS += --volume /dev/null:/home/user/MAIN/.git                # USELESS. Fuck.
+    # _CONTAINER_RUN_HIDE_DIRS_ARGS += --mount type=bind,source=/dev/null,target=/home/user/MAIN/.git  # USELESS. Fuck.
+    # _CONTAINER_RUN_HIDE_DIRS_ARGS += --mount type=tmpfs,destination=/home/user/MAIN/.git,tmpfs-mode=000,ro    # Unable to stop `root` in container.
+    $(shell mkdir -p $(_FAKE_MASK_DIR))
+    _CONTAINER_RUN_HIDE_DIRS_ARGS += --volume $(_FAKE_MASK_DIR):/home/user/MAIN/.git:ro,Z
+endif
+ifeq ($(HIDE_VSCODE_DIR),true)
+    # _CONTAINER_RUN_HIDE_DIRS_ARGS += --volume /dev/null:/home/user/MAIN/.vscode
+    $(shell mkdir -p $(_FAKE_MASK_DIR))
+    _CONTAINER_RUN_HIDE_DIRS_ARGS += --volume $(_FAKE_MASK_DIR):/home/user/MAIN/.vscode:ro,Z
 endif
 
 # ██╗   ██╗ █████╗ ██╗     ██╗██████╗  █████╗ ████████╗███████╗    ██╗   ██╗ █████╗ ██████╗ ███████╗
@@ -210,8 +223,7 @@ c-run:     ## [Container] Initialize the built Image into a running Container
 	    $(_CONTAINER_ENGINE_RUN_ARGS) \
 	    --hostname ${CONTAINER_NAME} \
 	    --volume "${PROJECT_PATH_ABS}:/home/user/MAIN" \
-	    --mount type=tmpfs,destination=/home/user/MAIN/.vscode \
-	    $(_CONTAINER_RUN_HIDE_GIT_ARGS) \
+	    $(_CONTAINER_RUN_HIDE_DIRS_ARGS) \
 	    localhost/${IMAGE_NAME}
 
 
