@@ -33,9 +33,9 @@ CONTAINER_NAME = claude_code_container__$(PROJECT_NAME)
 ## (Optional) Hide `.git/` directory inside container. (default: `true`)
 HIDE_GIT_DIR ?= true
 ifeq ($(HIDE_GIT_DIR),true)
-    GIT_HIDE_ARGS := --mount type=tmpfs,destination=/home/user/MAIN/.git
+    _CONTAINER_RUN_HIDE_GIT_ARGS := --mount type=tmpfs,destination=/home/user/MAIN/.git
 else
-    GIT_HIDE_ARGS :=
+    _CONTAINER_RUN_HIDE_GIT_ARGS :=
 endif
 
 # ██╗   ██╗ █████╗ ██╗     ██╗██████╗  █████╗ ████████╗███████╗    ██╗   ██╗ █████╗ ██████╗ ███████╗
@@ -210,7 +210,8 @@ c-run:     ## [Container] Initialize the built Image into a running Container
 	    $(_CONTAINER_ENGINE_RUN_ARGS) \
 	    --hostname ${CONTAINER_NAME} \
 	    --volume "${PROJECT_PATH_ABS}:/home/user/MAIN" \
-	    $(GIT_HIDE_ARGS) \
+	    --mount type=tmpfs,destination=/home/user/MAIN/.vscode \
+	    $(_CONTAINER_RUN_HIDE_GIT_ARGS) \
 	    localhost/${IMAGE_NAME}
 
 
