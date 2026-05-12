@@ -51,6 +51,21 @@ ifeq ($(HIDE_VSCODE_DIR),true)
     _CONTAINER_RUN_HIDE_DIRS_ARGS += --volume $(_FAKE_MASK_DIR):/home/user/MAIN/.vscode:ro,Z
 endif
 
+# NOTE: Fuck, rootless AppArmor cannot use `--security-opt apparmor`, don't use this. Use libkrun if requires a real security runtime.
+# [AppArmor] The AppArmor profile name to apply on `podman run`
+AA_PROFILE := local_attachmentless_podman_ai_agent
+_AA_OPT := $(shell \
+      aa-enabled --quiet 2>/dev/null && \
+      [ -f /etc/apparmor.d/$(AA_PROFILE) ] && \
+      echo '--security-opt apparmor=$(AA_PROFILE)')
+_check-aa-profile:   # [AppArmor] Check if AppArmor is installed & running & profile is existed
+	@if [ -z '$(_AA_OPT)' ]; then \
+	    echo "WARNING: AppArmor profile '$(AA_PROFILE)' not loaded - running without MAC enforcement." >&2; \
+	    printf 'Continue? [y/N] '; \
+	    read _ans; \
+	    case "$$_ans" in y|Y) ;; *) exit 1;; esac; \
+	fi
+
 # ██╗   ██╗ █████╗ ██╗     ██╗██████╗  █████╗ ████████╗███████╗    ██╗   ██╗ █████╗ ██████╗ ███████╗
 # ██║   ██║██╔══██╗██║     ██║██╔══██╗██╔══██╗╚══██╔══╝██╔════╝    ██║   ██║██╔══██╗██╔══██╗██╔════╝
 # ██║   ██║███████║██║     ██║██║  ██║███████║   ██║   █████╗      ██║   ██║███████║██████╔╝███████╗
@@ -155,7 +170,7 @@ help:     ## Show this self-documented help message.
 	fi
 
 ###
-### - SELinux Host: Only for host with SELinux enabled.
+### - SELinux Host: Only for host with SELinux enabled. (Obsoloted, I don't use this anymore. Use AppArmor instead)
 ###
 
 selinux-install-modules selinux-uninstall-modules: MOD_DIR := assets/selinux
@@ -172,6 +187,7 @@ selinux-install-modules:    ## [SELinux] Install module `local_container_virtiof
 
 selinux-uninstall-modules:   ## [SELinux] Uninstall module `local_container_virtiofs`.
 	sudo semodule -r $(MOD_NAME)
+
 
 
 #  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗███████╗██████╗      ██████╗ ██████╗ ███╗   ███╗███╗   ███╗ █████╗ ███╗   ██╗██████╗ ███████╗
